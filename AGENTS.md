@@ -120,43 +120,51 @@ docker compose up --build
 
 ### Rails Generators
 
-**SIEMPRE usa generadores de Rails** en lugar de crear archivos manualmente. Los generadores:
+**Generator-First Policy (mandatory):**
 
-- Crean la estructura correcta automáticamente
-- Generan tests y fixtures
-- Configuran rutas y dependencias
-- **SE EJECUTAN DENTRO DEL CONTENEDOR Docker** (nunca en el host)
+- **Always use a generator when one exists for the task** and avoid creating files manually.
+- Applies to models, resources/scaffolds, controllers, migrations, jobs, mailers, and related components.
+- Only create/edit files manually when **no** suitable generator exists for that case.
+
+**Reason (per Rails Guides):** generators enforce conventions, create consistent structure, and automatically prepare associated artifacts. Generators:
+
+- Automatically create the correct structure
+- Generate tests and fixtures
+- Configure routes and dependencies
+- **MUST RUN INSIDE THE DOCKER CONTAINER** (never on the host)
+
+**Official reference:** https://guides.rubyonrails.org/generators.html
 
 ```bash
-# ⚠️ CORRECTO - Ejecutar dentro del contenedor
+# ✅ CORRECT - Run inside the container
 ./run rails g resource Product name:string price:decimal description:text
 
-# ❌ INCORRECTO - No ejecutar nunca en el host
+# ❌ INCORRECT - Never run on the host
 # rails g resource Product name:string price:decimal description:text
 
-# Generar un recurso completo (modelo, controlador, vistas, migración)
+# Generate a full resource (model, controller, views, migration)
 ./run rails g resource Product name:string price:decimal description:text
 
-# Generar solo modelo
+# Generate only a model
 ./run rails g model User email:string name:string
 
-# Generar solo controlador
+# Generate only a controller
 ./run rails g controller Products
 
-# Generar migración
+# Generate a migration
 ./run rails g migration AddFieldsToUsers
 
-# Generar job
+# Generate a job
 ./run rails g job ProcessOrder
 
-# Generar mailer
+# Generate a mailer
 ./run rails g mailer UserMailer
 
-# Revertir el último generador
+# Revert the last generator
 ./run rails d resource Product
 ```
 
-**Ver también**: https://guides.rubyonrails.org/generators.html
+**See also:** https://guides.rubyonrails.org/generators.html
 
 ### Dependency Management
 
